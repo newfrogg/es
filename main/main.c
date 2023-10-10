@@ -5,10 +5,11 @@
 #include "sdkconfig.h"
 #include "esp_timer.h"
 
-#define BUTTON_PIN 2
+#define BUTTON_PIN 17
 #define DEBOUNCE_TIME 50
 
 static int student_id_delay = 1000;
+static int esp32_delay = 10;
 
 enum BUTTON
 {
@@ -33,6 +34,44 @@ void student_id_task(void *pvParameter)
     vTaskDelete(NULL);
 }
 
+void esp32_task(void *pvParameter)
+{
+
+    while (1)
+    {
+        if (gpio_get_level(BUTTON_PIN) != lastFlickerableState)
+        {
+            // reset the debouncing timer
+            lastDebounceTime = esp_timer_get_time();
+            // save the the last flickerable state
+            lastFlickerableState = gpio_get_level(BUTTON_PIN);
+        }
+
+        if ((esp_timer_get_time() - lastDebounceTime) > DEBOUNCE_TIME)
+        {
+            switch (BUTTON_STATE)
+            {
+            case RELEASE:
+                if (gpio_get_level(BUTTON_PIN) == 0)
+                {
+                    BUTTON_STATE = PRESSED;
+                    printf("ESP32\n");
+                }
+                break;
+            case PRESSED:
+                if (gpio_get_level(BUTTON_PIN) == 1)
+                {
+                    BUTTON_STATE = RELEASE;
+                }
+                break;
+            }
+            vTaskDelay(esp32_delay / portTICK_RATE_MS);
+        }
+    }
+
+    vTaskDelete(NULL);
+}
+
 void gpio_init()
 {
     gpio_reset_pin(BUTTON_PIN);
@@ -43,7 +82,7 @@ void gpio_init()
 void app_main(void)
 {
     gpio_init();
-    printf("ESP32\n");
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
+
     xTaskCreate(&student_id_task, "student_id_task", 2048, NULL, 3, NULL);
+    xTaskCreate(&esp32_task, "esp32_task", 2048, NULL, 9, NULL);
 }
