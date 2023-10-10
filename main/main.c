@@ -5,18 +5,10 @@
 #include "sdkconfig.h"
 #include "esp_timer.h"
 
-<<<<<<< HEAD
 #define BUTTON_PIN 2
 #define DEBOUNCE_TIME 50
 
 static int student_id_delay = 1000;
-=======
-#define BUTTON_PIN 17
-#define DEBOUNCE_TIME 50
-
-static int student_id_delay = 1000;
-static int esp32_delay = 10;
->>>>>>> origin/lab2
 
 enum BUTTON
 {
@@ -36,44 +28,6 @@ void student_id_task(void *pvParameter)
     {
         printf("2011213\n");
         vTaskDelay(student_id_delay / portTICK_RATE_MS);
-    }
-
-    vTaskDelete(NULL);
-}
-
-void esp32_task(void *pvParameter)
-{
-
-    while (1)
-    {
-        if (gpio_get_level(BUTTON_PIN) != lastFlickerableState)
-        {
-            // reset the debouncing timer
-            lastDebounceTime = esp_timer_get_time();
-            // save the the last flickerable state
-            lastFlickerableState = gpio_get_level(BUTTON_PIN);
-        }
-
-        if ((esp_timer_get_time() - lastDebounceTime) > DEBOUNCE_TIME)
-        {
-            switch (BUTTON_STATE)
-            {
-            case RELEASE:
-                if (gpio_get_level(BUTTON_PIN) == 0)
-                {
-                    BUTTON_STATE = PRESSED;
-                    printf("ESP32\n");
-                }
-                break;
-            case PRESSED:
-                if (gpio_get_level(BUTTON_PIN) == 1)
-                {
-                    BUTTON_STATE = RELEASE;
-                }
-                break;
-            }
-            vTaskDelay(esp32_delay / portTICK_RATE_MS);
-        }
     }
 
     vTaskDelete(NULL);
