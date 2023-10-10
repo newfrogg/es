@@ -28,7 +28,7 @@ void student_id_task(void *pvParameter)
     while (1)
     {
         printf("2011213\n");
-        vTaskDelay(student_id_delay / portTICK_RATE_MS);
+        vTaskDelay(student_id_delay / portTICK_PERIOD_MS);
     }
 
     vTaskDelete(NULL);
@@ -65,7 +65,7 @@ void esp32_task(void *pvParameter)
                 }
                 break;
             }
-            vTaskDelay(esp32_delay / portTICK_RATE_MS);
+            vTaskDelay(esp32_delay / portTICK_PERIOD_MS);
         }
     }
 
