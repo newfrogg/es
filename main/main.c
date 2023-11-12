@@ -32,6 +32,7 @@ void func_2(void *pvParameter)
         else if (configUSE_PREEMPTION == 1)
         {
             ulIdleTask2Count++;
+            printf("==========>TASK2 = %d \n", (int)ulIdleTask2Count);
         }
     }
 }
@@ -54,6 +55,7 @@ void func_3(void *pvParameter)
         else if (configUSE_PREEMPTION == 1)   
         {
             ulIdleTask3Count++;
+            printf("==========>TASK3 = %d \n", (int)ulIdleTask3Count);
         } 
     }
 }
@@ -77,8 +79,8 @@ void func_1(void *pvParameter)
         }
         else 
         {
-            printf("==============|| %d \n", (int)ulIdleTask2Count);
-            printf("=======|| %d \n", (int)ulIdleTask3Count);
+            printf("=======================================||TASK2 = %d \n \n", (int)ulIdleTask2Count);
+            printf("==============================||TASK3 = %d \n \n", (int)ulIdleTask3Count);
             vTaskDelay(pdMS_TO_TICKS(2000));
         }
     }
@@ -95,8 +97,8 @@ void app_main()
     }
     else
     {
-        xTaskCreatePinnedToCore(&func_1,"task1",1024*5,NULL,2,NULL,1);
-        xTaskCreatePinnedToCore(&func_2,"task2",1024*5,NULL,0,NULL,0);
-        xTaskCreatePinnedToCore(&func_3,"task3",1024*5,NULL,0,NULL,0);
+        xTaskCreatePinnedToCore(&func_3, "task3", 1024 * 5, NULL, 1, NULL, 0);
+        xTaskCreatePinnedToCore(&func_2, "task2", 1024 * 5, NULL, 1, NULL, 0);
+        xTaskCreatePinnedToCore(&func_1, "task1", 1024 * 5, NULL, 2, NULL, 0);
     }
 }
