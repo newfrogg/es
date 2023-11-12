@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2010-2022 Espressif Systems (Shanghai) CO LTD
+ *
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/FreeRTOSConfig.h"
@@ -101,4 +107,5 @@ void app_main()
         xTaskCreatePinnedToCore(&func_2, "task2", 1024 * 5, NULL, 1, NULL, 0);
         xTaskCreatePinnedToCore(&func_1, "task1", 1024 * 5, NULL, 2, NULL, 0);
     }
+
 }
